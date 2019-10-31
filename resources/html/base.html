@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bond Analyzer</title>
+
+    <!-- styles -->
+    {% style "/assets/bulma/css/bulma.min.css" %}
+    {% style "/assets/material-icons/css/material-icons.min.css" %}
+
+    {% style "/css/screen.css" %}
+  </head>
+  <body>
+      <!-- navbar -->
+      <nav class="navbar is-info">
+          <div class="container">
+              <div class="navbar-brand">
+                  <a class="navbar-item" href="/" style="font-weight:bold;">Bond Analyzer</a>
+                  <span class="navbar-burger burger" data-target="nav-menu">
+                      <span>dddddd</span>
+                      <span></span>
+                      <span></span>
+                  </span>
+              </div>
+              <div id="nav-menu" class="navbar-menu">
+                  <div class="navbar-start">
+                      <a href="/" class="navbar-item{% ifequal page "home.html" %} is-active{%endifequal%}">Home</a>                      
+                  </div>
+              </div>
+          </div>
+      </nav>
+
+      <section class="section">
+        <input id="token" type="hidden" value="{{csrf-token}}" />
+        <div id="content" class="container">
+        </div>
+      </section>
+
+    <!-- scripts -->
+    <script type="text/javascript">
+      (function() {
+        var burger = document.querySelector('.burger');
+        var nav = document.querySelector('#'+burger.dataset.target);
+        burger.addEventListener('click', function(){
+          burger.classList.toggle('is-active');
+          nav.classList.toggle('is-active');
+        });
+      })();
+    </script>
+
+    {% script "/js/app.js" %} 
+    
+    {% block page-scripts %}
+    {% endblock %}
+  </body>
+</html>

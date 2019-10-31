@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="tile is-ancestor">
+  <div class="tile is-vertical">
+    <div class="tile">
+      <table class="table is-striped">
+        <thead>
+          <th scope="col">Description</th>
+          <th scope="col">Time</th>      
+          <th scope="col">Purchase Price</th>
+          <th scope="col">Deposit</th>
+          <th scope="col">Term Years</th>
+          <th scope="col">Interest Rate</th>
+        </thead>
+        <tbody class="row">
+        {% for bond in bonds %}      
+          <tr>          
+            <th scope="row">{{bond.description}}</th>          
+            <td>
+              <time>{{bond.updated|date:"yyyy-MM-dd HH:mm"}}</time>
+            </td>
+            <td class="col">{{bond.principal}}</td>
+            <td class="col">{{bond.deposit}}</td>
+            <td class="col">{{bond.term_years}}</td>
+            <td class="col">{{bond.interest_rate}}</td>        
+          </tr>      
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="tile">
+      <form method="POST" action="/bond">
+        <div class="form-group">
+          {% csrf-field %}
+          <p>
+            Description:
+            <input  class = "form-control" 
+                    type  = "text" 
+                    name  = "description"
+                    value = "" />
+          </p>
+          <p>
+            Purchase Price:
+            <input  class = "form-control" 
+                    type  = "number"
+                    name  = "principal"
+                    value = "" />
+          </p>
+          <p>
+            Deposit:
+            <input  class = "form-control" 
+                    type  = "number" 
+                    name  = "deposit"
+                    value = ""
+                    step  = 0.01 />
+          </p>
+          <p>
+            Term Years:
+            <input  class = "form-control" 
+                    type  = "number" 
+                    name  = "term_years"
+                    value = ""
+                    min   = 1
+                    max   = 100
+                    step  = 1 />
+          </p>
+          <p>
+            Interest Rate:
+            <input  class = "form-control" 
+                    type  = "number" 
+                    name  = "interest_rate"
+                    value = ""
+                    min   = 0.01
+                    max   = 100
+                    step  = 0.01 />
+          </p>
+          <input type="button" class="button is-success" value="Calculate" />
+          <input type="submit" class="button is-primary" value="Save" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
