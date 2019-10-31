@@ -15,7 +15,7 @@
 
 (defn create-bond! [req]
   (let [bond (:params req)
-        id   (db/create-bond! bond)]    
+        id   (:id (db/create-bond! bond))] 
     (response/ok (assoc bond :id id))))
 
 (defn update-bond! [req]

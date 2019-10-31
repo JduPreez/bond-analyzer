@@ -1,4 +1,4 @@
--- :name create-bond! :! :n
+-- :name create-bond! :i! :raw
 -- :doc creates a new bond record
 INSERT INTO bond
             (description,

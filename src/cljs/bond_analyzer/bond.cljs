@@ -12,36 +12,8 @@
                  :term_years    0
                  :interest_rate 0})
 
-(def amortization$ (atom nil))
+(def amortization$ (atom []))
 (def bond$ (atom empty-bond))
-
-(defn- handler
-  [response]
-  (js/console.log (str "ENTER -handler, response: " response))
-  (let []    
-    (reset! bond$ response)))
-
-(defn get-bond [id]
-  (if id
-    (GET (str "/bonds/" id)
-      {:handler handler})
-    (do (reset! bond$ empty-bond)
-        (reset! amortization$ nil))))
-
-(defn save-bond! [bond]
-  (if (:id bond)
-    (PUT (str "/bonds/" (:id bond))
-      {:headers       {"Accept"       "application/transit+json"
-                       "x-csrf-token" (.-value (.getElementById js/document "token"))}
-       :params        bond
-       :handler       #(js/console.log (str "Update bond response" %))
-       :error-handler #(js/console.log (str "Update bond error" %))})
-    (POST "/bonds"
-      {:headers       {"Accept"       "application/transit+json"
-                       "x-csrf-token" (.-value (.getElementById js/document "token"))}
-       :params        bond
-       :handler       #(reset! bond$ %)
-       :error-handler #(js/console.log (str "Update bond error" %))})))
 
 (defn final-principal [principal deposit]
   (- principal deposit))
@@ -82,6 +54,35 @@
                                      new-balance
                                      new-payments))))]
     (reset! amortization$ amortization)))
+
+(defn- handler
+  [response]
+  (js/console.log (str "ENTER -handler, response: " response))
+  (reset! bond$ response)
+  (amortize @bond$))
+
+(defn get-bond [id]
+  (if id
+    (GET (str "/bonds/" id)
+      {:handler handler})
+    (do (reset! bond$ empty-bond)
+        (reset! amortization$ []))))
+
+(defn save-bond! [bond]
+  (js/console.log (str "BOND!!! " bond))
+  (if (:id bond)
+    (PUT (str "/bonds/" (:id bond))
+      {:headers       {"Accept"       "application/transit+json"
+                       "x-csrf-token" (.-value (.getElementById js/document "token"))}
+       :params        bond
+       :handler       #(js/console.log (str "Update bond response" %))
+       :error-handler #(js/console.log (str "Update bond error" %))})
+    (POST "/bonds"
+      {:headers       {"Accept"       "application/transit+json"
+                       "x-csrf-token" (.-value (.getElementById js/document "token"))}
+       :params        bond
+       :handler       #(reset! bond$ %)
+       :error-handler #(js/console.log (str "Update bond error" %))})))
                    
 (defn- bond-detail []
   (fn []
